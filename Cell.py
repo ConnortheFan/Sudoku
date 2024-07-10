@@ -101,3 +101,9 @@ class Cell:
             candidates (List[int]): List of candidates
         """
         self.candidates = candidates
+        
+    def __str__(self) -> str:
+        return str(self.number)
+    
+    def __repr__(self) -> str:
+        return str(self.number)
