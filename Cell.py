@@ -31,36 +31,25 @@ class Cell:
     filled: bool
     fixed: bool
 
-    def __init__(self, row: int, col: int) -> None:
-        """Initialize empty cell
+    def __init__(self, row: int, col: int, number: int = 0) -> None:
+        """Initialize cell
 
         Args:
             row (int): row
             col (int): column
-        """
-        self.row = row
-        self.col = col
-        self.box = 3 * ((row - 1) // 3) + ((col - 1) // 3) + 1
-        self.number = 0
-        self.candidates = []
-        self.filled = False
-        self.fixed = False
-
-    def __init__(self, row: int, col: int, number: int) -> None:
-        """Initialize filled cell
-
-        Args:
-            row (int): row
-            col (int): column
-            number (int): number
+            number (int, optional): number to fill cell. Defaults to empty cell
         """
         self.row = row
         self.col = col
         self.box = 3 * ((row - 1) // 3) + ((col - 1) // 3) + 1
         self.number = number
         self.candidates = []
-        self.filled = True
-        self.fixed = True
+        if number == 0:
+            self.filled = False
+            self.fixed = False
+        else:
+            self.filled = True
+            self.fixed = True
 
     def fill(self, number: int) -> None:
         """Place a solid number into the cell
