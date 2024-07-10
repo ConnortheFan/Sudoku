@@ -107,3 +107,6 @@ class Cell:
     
     def __repr__(self) -> str:
         return str(self.number)
+    
+    def __lt__(self, other) -> bool:
+        return self.row * 9 + self.col < other.row * 9 + other.col
