@@ -19,20 +19,50 @@ class Cell:
         List of candidates for the cell
     filled: bool
         If the cell should be displayed as the number or the candidates
-    immutable: bool
+    fixed: bool
         If the cell is immutable
     """
 
-    def __init__(self, row: int, col: int, box: int, number: int = 0, filled: bool = False) -> None:
-        self.row: int = row
-        self.col: int = col
-        self.box: int = box
-        self.number: int = number
-        self.candidates: List[int] = [1,2,3,4,5,6,7,8,9]
-        self.filled: bool = filled
-        self.immutable: bool = filled
+    row: int
+    col: int
+    box: int
+    number: int
+    candidates: List[int]
+    filled: bool
+    fixed: bool
 
-    def fill(self, number: int) -> bool:
+    def __init__(self, row: int, col: int) -> None:
+        """Initialize empty cell
+
+        Args:
+            row (int): row
+            col (int): column
+        """
+        self.row = row
+        self.col = col
+        self.box = 3 * ((row - 1) // 3) + ((col - 1) // 3) + 1
+        self.number = 0
+        self.candidates = []
+        self.filled = False
+        self.fixed = False
+
+    def __init__(self, row: int, col: int, number: int) -> None:
+        """Initialize filled cell
+
+        Args:
+            row (int): row
+            col (int): column
+            number (int): number
+        """
+        self.row = row
+        self.col = col
+        self.box = 3 * ((row - 1) // 3) + ((col - 1) // 3) + 1
+        self.number = number
+        self.candidates = []
+        self.filled = True
+        self.fixed = True
+
+    def fill(self, number: int) -> None:
         """Place a solid number into the cell
 
         Args:
@@ -41,20 +71,44 @@ class Cell:
         Returns:
             bool: If the placement was successful
         """
-
-        
-
-        return True
+        self.number = number
+        self.filled = True
     
-    def removeCandidate(self, number: int) -> bool:
+    def empty(self) -> None:
+        """Removes filled number from cell if filled
+        """
+        self.number = 0
+        self.filled = False
+    
+    def addCandidate(self, number: int) -> None:
+        """Adds a candidate to the cell
+
+        Args:
+            number (int): Candidate to add
+        """
+        self.candidates.append(number)
+        self.candidates = list(set(self.candidates))
+    
+    def removeCandidate(self, number: int) -> None:
         """Remove a candidate from the cell
 
         Args:
-            number (int): Candidate number to remove
-
-        Returns:
-            bool: If the removal was successful
+            number (int): Candidate to remove
         """
-        
-        return True
+        if number in self.candidates:
+            self.candidates.remove(number)
     
+    def clear(self) -> None:
+        """Clears cell to basic state
+        """
+        self.number = 0
+        self.candidates = []
+        self.filled = False
+    
+    def setCandidates(self, candidates: List[int]) -> None:
+        """Sets candidates to the cell
+
+        Args:
+            candidates (List[int]): List of candidates
+        """
+        self.candidates = candidates
