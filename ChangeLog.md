@@ -1,3 +1,17 @@
+# 7/10/2024
+
+Got back to work on this. 
+
+Completed the Cell and Sudoku basic functionality, although I still need to implement making a Sudoku board from some given csv file and making the isValid() method.
+
+The Cell file should be done since I don't anticipate needing to change anything unless necessary to work with the Move class.
+
+I think the next steps are
+
+1. Finish Sudoku init and isValid
+2. Begin solver functionality
+3. Implement the Move class and try to make an undo/redo function
+
 # 7/3/2024
 
 Created function outlines in the Sudoku, Cell, and Move files.
