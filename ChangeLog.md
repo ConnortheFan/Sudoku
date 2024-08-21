@@ -1,3 +1,19 @@
+# 8/21/2024
+
+Been away for a while on vacation and just busy with personal life.
+
+Making an update by adding the 8/21/24 NYT Sudoku puzzle to use for my tests and to show that I haven't forgotten or given up this project.
+
+I've also added descriptions of some of the methods I plan to implement in the solver. I want this project to be educational for whoever uses it and for them to be better at Sudoku by the end of it.
+
+Current thoughts:
+
+* Use a decorator in the solver functions to make it easier to implement more methods in the future
+* Find something to parse the puzzle files
+    * I'm not sure what filetype these are since I didn't explicitly label them. Will have to see if they will work.
+* The Move class will only record all changes made to the board in the previous move, like git. This way it will be easy to undo/redo
+* I want to use pygame to make a window for the sudoku board, fit with a home screen, a board, a keypad, keyboard integration, hints, a free solver space, and a description area.
+
 # 7/10/2024
 
 Got back to work on this. 
