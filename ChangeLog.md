@@ -1,3 +1,22 @@
+# 8/22/2024
+
+Finally have some time to get back on finishing this project.
+
+Changes:
+
+* Added the 8/22/24 NTY Sudoku puzzles
+* Implemented the Sudoku board init from a given file
+* Began the Solver class
+* Implemented the Sudoku board isValid function
+
+To-do:
+
+* Create a framework for the Move class
+* Add an undo and redo function to Sudoku class
+* Figure out how to use decorators to manage the Solver functions
+* Use pygame to create a window to play Sudoku (import pygame and make a main.py file)
+* Think of names for all the solver functions (gotta get creative)
+
 # 8/21/2024
 
 Been away for a while on vacation and just busy with personal life.
