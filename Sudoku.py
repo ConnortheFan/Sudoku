@@ -14,7 +14,7 @@ class Sudoku:
     missing: List[int]
     
     
-    def __init__(self, filename: str = None) -> None:
+    def __init__(self, filename: str = "") -> None:
         """Creates a Sudoku board.
         
         If no board is given, creates an empty board.
@@ -22,13 +22,22 @@ class Sudoku:
         Args:
             filename (str, optional): filename of Sudoku board to create. Defaults to None.
         """
-        
-        if filename == None:
-            self.board = []
+        self.board = []
+        if filename == "":
             for row in range(1,10):
                 self.board.append([])
                 for col in range(1,10):
                     self.board[row-1].append(Cell(row, col))
+                    
+        else:
+            f = open(filename, "r")
+            for row in range(1,10):
+                nums = f.readline().split(" ")
+                self.board.append([])
+                for col in range(1,10):
+                    self.board[row-1].append(Cell(row, col, int(nums[col-1])))
+            f.close()
+                
 
     def getCell(self, row: int, col: int) -> Cell:
         return self.board[row-1][col-1]
@@ -178,45 +187,18 @@ class Sudoku:
         
     
 def main() -> None:
-    board = Sudoku()
-    board.show()
+    date = "puzzles/8-22-24/"
+    boards = ["easy", "med", "hard"]
+    sols = ["easysol", "medsol", "hardsol"]
+    for i in range(len(boards)):
+        board = Sudoku(date+boards[i])
+        print(date+boards[i])
+        board.show()
+        sol = Sudoku(date+sols[i])
+        print(date+sols[i])
+        sol.show()
+    return
     
-    board.fill(5,5,5)
-    board.fill(2,3,9)
-    board.show()
-    
-    board.fill(5,5,9)
-    board.empty(2,3)
-    board.show()
-    
-    board.addCandidate(1,2,2)
-    board.addCandidate(1,2,1)
-    print(board.getRow(1))
-    print(board.getCell(1,2).candidates)
-    board.addCandidate(1,2,2)
-    print(board.getCell(1,2).candidates)
-    board.clear(1,2)
-    print(board.getCell(1,2).candidates)
-
-    board.fill(4,4,3)
-    board.fill(5,6,6)
-    print(board.getBox(5))
-    board.show()
-    
-    for i in range(1,10):
-        board.fill(i,5,i)
-        board.fill(5,i,i)
-    board.fill(4,4,1)
-    board.fill(4,5,2)
-    board.fill(4,6,3)
-    board.fill(5,4,4)
-    board.fill(5,5,5)
-    board.fill(5,6,6)
-    board.fill(6,4,7)
-    board.fill(6,5,8)
-    board.fill(6,6,9)
-    board.show()
-    print(board.getRelated(5,5))
     
 if __name__ == "__main__":
     main()
