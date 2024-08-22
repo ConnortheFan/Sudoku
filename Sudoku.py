@@ -162,6 +162,32 @@ class Sudoku:
         cells = sorted(list(set(cells)))
         return cells
     
+    def getRelatedUnfilled(self, row: int, col: int) -> List[Cell]:
+        """Gets all related Cells that are unfilled to a given Cell
+
+        Args:
+            row (int): row
+            col (int): column
+
+        Returns:
+            List[Cell]: list of unfilled related Cells
+        """
+        related = self.getRelated(row, col)
+        return [cell for cell in related if cell.filled is False]
+    
+    def getRelatedFilled(self, row: int, col: int) -> List[Cell]:
+        """Gets all related Cells that are filled to a given Cell
+
+        Args:
+            row (int): row
+            col (int): column
+
+        Returns:
+            List[Cell]: list of filled related Cells
+        """
+        related = self.getRelated(row, col)
+        return [cell for cell in related if cell.filled is True]
+    
     def show(self) -> None:
         """Prints Sudoku board representation
         """
@@ -180,10 +206,20 @@ class Sudoku:
     
     def isValid(self) -> bool:
         """Checks if current Sudoku board is valid
+        
+        A board is valid if in each row/col/box the numbers 1-9 do not repeat
 
         Returns:
             bool: if valid
         """
+        filled = [cell for row in self.board for cell in row if cell.filled is True]
+        for cell in filled:
+            relatedCells = self.getRelatedFilled(cell.row, cell.col)
+            relatedCells.remove(cell)
+            for related in relatedCells:
+                if cell.number == related.number:
+                    return False
+        return True
         
     
 def main() -> None:
@@ -194,10 +230,17 @@ def main() -> None:
         board = Sudoku(date+boards[i])
         print(date+boards[i])
         board.show()
+        print(board.isValid())
         sol = Sudoku(date+sols[i])
         print(date+sols[i])
         sol.show()
-    return
+        print(sol.isValid())
+        
+    invalid = Sudoku()
+    invalid.fill(1,1,1)
+    invalid.fill(1,2,1)
+    print(invalid.isValid())
+    
     
     
 if __name__ == "__main__":
