@@ -1,3 +1,24 @@
+# 9/16/2024
+
+I'm finally back to work on this. Been busy with roadtrips and housework, so couldn't access my computer or work for some time. I want to have this finished before I get back to school in like a week or so.
+
+Changes:
+
+* Made fill function remove candidates for all related cells
+* Created Move class datastructure
+    * Using a doubly linked list
+* Implemented the Move class into Sudoku functions
+* Made the undo() and redo() functions
+* Did basic testing. Further testing might be needed later, but for now it works.
+
+The main change here is the move class that works with the undo/redo functions. Moves are stored as a doubly linked list, which allows the redo function to work. When a new branch is made by undoing, then making a change, all moves undone are forgotten thanks to Python's built in object deletion once they no longer have any references. For now, moves are stored by classifying them via strings, which means that any changes are done manually. Hopefully I've already done all cases for this, so it should be fine. Thanks to how I needed to store multiple cell changes from the automatic candidate removal from filling, each move can store multiple changes at once. This means that I could implement candidate functions that work for multiple cells like in Logic Wiz Sudoku.
+
+To-Do:
+
+* Make Candidate functions for multiple cells at once
+* Add screen/window to play Sudoku with working buttons (pygame)
+* Make Solver
+
 # 8/22/2024
 
 Finally have some time to get back on finishing this project.
