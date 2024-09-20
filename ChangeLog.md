@@ -1,3 +1,24 @@
+# 9/19/2024
+
+Just made some quick changes to the methods to be able to select and change multiple cells at once like in Logic Wiz Sudoku.
+
+From working on this, I've realized that I don't like how Python doesn't allow multiple functions of the same name and different signatures like Java or C++ does. Its especially annoying in the __init__ function since I want the different initialization options to be separate functions.
+
+Changes:
+
+* Changed most Sudoku functions to take either a Cell or a tuple (row, col)
+    * fill
+    * add/removeCandidate
+    * empty
+    * clear
+    * getRelated(/filled/unfilled)
+* Changed add and remove Candidate to take multiple cells
+
+To-Do:
+
+* Make main.py that uses pygame to make an interactive window
+* Implement Solver
+
 # 9/16/2024
 
 I'm finally back to work on this. Been busy with roadtrips and housework, so couldn't access my computer or work for some time. I want to have this finished before I get back to school in like a week or so.
