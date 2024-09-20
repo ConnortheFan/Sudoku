@@ -46,84 +46,110 @@ class Sudoku:
     def getCell(self, row: int, col: int) -> Cell:
         return self.board[row-1][col-1]
     
-    def fill(self, row: int, col: int, number: int) -> None:
+    def fill(self, cell, number: int) -> None:
         """Fills Cell with number and makes Move
 
         Args:
-            row (int): row
-            col (int): column
+            cell (Cell or (int, int)): Either the Cell object or (row, col) tuple
             number (int): number
         """
         
-        cell: Cell = self.getCell(row,col)
+        if isinstance(cell, tuple):
+            cell = self.getCell(cell[0], cell[1])
         if not cell.fixed:
             move = Move(self.currMove)
             move.addChange(cell, "fill", [cell.number, number])
             cell.fill(number)
-            for related in self.getRelatedUnfilled(row, col):
+            for related in self.getRelatedUnfilled(cell):
                 if number in related.candidates:
                     related.removeCandidate(number)
                     move.addChange(related, "removeCandidate", number)
             self.currMove = move
     
-    def empty(self, row: int, col: int) -> None:
+    def empty(self, cell) -> None:
         """Empty Cell by removing filled number
 
         Args:
-            row (int): row
-            col (int): column
+            cell (Cell or (int, int)): Cell object or tuple (row, col)
         """
-        cell: Cell = self.getCell(row,col)
+        if isinstance(cell, tuple):
+            cell = self.getCell(cell[0],cell[1])
         if not cell.fixed and cell.filled:
             move = Move(self.currMove)
             move.addChange(cell, "empty", [cell.number, 0])
             cell.empty()
             self.currMove = move
     
-    def clear(self, row: int, col: int) -> None:
+    def clear(self, cell) -> None:
         """Clear all data in a Cell unless its fixed
 
         Args:
-            row (int): row
-            col (int): column
+            cell (Cell or (int, int)): Cell object or tuple (row, col)
         """
-        cell: Cell = self.getCell(row,col)
+        if isinstance(cell, tuple):
+            cell = self.getCell(cell[0],cell[1])
         if not cell.fixed:
             move = Move(self.currMove)
             move.addChange(cell, "clear", [cell.candidates, []])
             cell.clear()
             self.currMove = move
     
-    def removeCandidate(self, row: int, col: int, number: int) -> None:
-        """Removes candidate from Cell
+    def removeCandidate(self, cells, number: int) -> None:
+        """Removes candidate from Cells
 
         Args:
-            row (int): row
-            col (int): column
+            cells (Cell or (int, int) or List[Cell, (int,int)]): Cell object, tuple (row, col), or List of Cells and tuples
             number (int): candidate
         """
-        cell: Cell = self.getCell(row,col)
-        if not cell.fixed and not cell.filled and number in cell.candidates:
-            
+        
+        # Check for multiple cells selected
+        if isinstance(cells, List):
             move = Move(self.currMove)
-            move.addChange(cell, "removeCandidate", number)
-            cell.removeCandidate(number)
+            for cell in cells:
+                if isinstance(cell, tuple):
+                    cell = self.getCell(cell[0], cell[1])
+                if not cell.fixed and not cell.filled and number in cell.candidates:
+                    move.addChange(cell, "removeCandidate", number)
+                    cell.removeCandidate(number)
             self.currMove = move
+            return
+        else:
+            # Single cell
+            if isinstance(cells, tuple):
+                cells = self.getCell(cells[0], cells[1])
+            if not cells.fixed and not cells.filled and number in cells.candidates:
+                move = Move(self.currMove)
+                move.addChange(cells, "removeCandidate", number)
+                cells.removeCandidate(number)
+                self.currMove = move
                 
-    def addCandidate(self, row: int, col: int, number: int) -> None:
+    def addCandidate(self, cells, number: int) -> None:
         """Adds a candidate to Cell
 
         Args:
-            row (int): row
-            col (int): column
+            cells (Cell or (int, int) or List[Cell, (int,int)]): Cell object, tuple (row, col), or List of Cells and tuples
             number (int): candidate
         """
-        cell: Cell = self.getCell(row,col)
-        if not cell.fixed and not cell.filled and number not in cell.candidates:
+        # Check for multiple cells selected
+        if isinstance(cells, List):
             move = Move(self.currMove)
-            move.addChange(cell, "addCandidate", number)
-            cell.addCandidate(number)
+            for cell in cells:
+                if isinstance(cell, tuple):
+                    cell = self.getCell(cell[0], cell[1])
+                if not cell.fixed and not cell.filled and number not in cell.candidates:
+                    move.addChange(cell, "addCandidate", number)
+                    cell.addCandidate(number)
             self.currMove = move
+            return
+        else:
+            # Single cell
+            if isinstance(cells, tuple):
+                cells = self.getCell(cells[0], cells[1])
+            if not cells.fixed and not cells.filled and number not in cells.candidates:
+                move = Move(self.currMove)
+                move.addChange(cells, "addCandidate", number)
+                cells.addCandidate(number)
+                self.currMove = move
     
     def getRow(self, row: int) -> List[Cell]:
         """Gets row of Cells
@@ -167,51 +193,50 @@ class Sudoku:
                 cells.append(self.getCell(row,col))
         return cells
     
-    def getRelated(self, row: int, col: int) -> List[Cell]:
+    def getRelated(self, cell) -> List[Cell]:
         """Gets all related Cells to a given Cell
 
         Args:
-            row (int): row
-            col (int): column
+            cell (Cell or (int, int)): Cell object or tuple (row, col)
 
         Returns:
             List[Cell]: list of related Cells
         """
-        cell: Cell = self.getCell(row,col)
+        
+        if isinstance(cell, tuple):
+            cell = self.getCell(cell[0],cell[1])
         
         cells: List[Cell] = []
         cells.extend(self.getBox(cell.box))
-        cells.extend(self.getRow(row))
-        cells.extend(self.getCol(col))
+        cells.extend(self.getRow(cell.row))
+        cells.extend(self.getCol(cell.col))
         
         cells = sorted(list(set(cells)))
         return cells
     
-    def getRelatedUnfilled(self, row: int, col: int) -> List[Cell]:
+    def getRelatedUnfilled(self, cell) -> List[Cell]:
         """Gets all related Cells that are unfilled to a given Cell
 
         Args:
-            row (int): row
-            col (int): column
+            cell (Cell or (int, int)): Cell object or tuple (row, col)
 
         Returns:
             List[Cell]: list of unfilled related Cells
         """
-        related = self.getRelated(row, col)
-        return [cell for cell in related if cell.filled is False]
+        related = self.getRelated(cell)
+        return [cells for cells in related if cells.filled is False]
     
-    def getRelatedFilled(self, row: int, col: int) -> List[Cell]:
+    def getRelatedFilled(self, cell) -> List[Cell]:
         """Gets all related Cells that are filled to a given Cell
 
         Args:
-            row (int): row
-            col (int): column
+            cell (Cell or (int, int)): Cell object or tuple (row, col)
 
         Returns:
             List[Cell]: list of filled related Cells
         """
-        related = self.getRelated(row, col)
-        return [cell for cell in related if cell.filled is True]
+        related = self.getRelated(cell)
+        return [cells for cells in related if cells.filled is True]
     
     def show(self) -> None:
         """Prints Sudoku board representation
@@ -327,21 +352,23 @@ def main() -> None:
     sudoku.show()
     
     # Make sure no moves are made when no changes made
-    sudoku.removeCandidate(5,6,1)
-    sudoku.removeCandidate(1,1,5)
-    sudoku.addCandidate(6,5,9)
-    sudoku.clear(1,1)
-    sudoku.empty(1,1)
+    c56 = sudoku.getCell(5,6)
+    sudoku.removeCandidate(c56,1)
+    sudoku.removeCandidate((1,1),5)
+    sudoku.addCandidate((6,5),9)
+    sudoku.clear((1,1))
+    sudoku.empty((1,1))
     
     # Make sure fill works with Move
-    sudoku.addCandidate(4,6,1)
-    sudoku.addCandidate(4,6,2)
-    sudoku.addCandidate(4,6,1)
-    sudoku.removeCandidate(4,6,1)
-    sudoku.empty(4,6)
-    sudoku.clear(4,6)
-    sudoku.addCandidate(4,6,1)
-    sudoku.fill(5,6,1)
+    c46 = sudoku.getCell(4,6)
+    sudoku.addCandidate(c46,1)
+    sudoku.addCandidate(c46,2)
+    sudoku.addCandidate((4,6),1)
+    sudoku.removeCandidate(c46,1)
+    sudoku.empty(c46)
+    sudoku.clear(c46)
+    sudoku.addCandidate(c46,1)
+    sudoku.fill(c56,1)
     
     print("Regular")
     sudoku.show()       
@@ -363,11 +390,17 @@ def main() -> None:
 
     print("Break")
     sudoku.undo()
-    sudoku.addCandidate(5,6,1)
+    sudoku.addCandidate(c56,1)
     sudoku.show()
     sudoku.printMoves()
     print(sudoku.getCell(4,6).candidates)
     print(sudoku.getCell(5,6).candidates)
+    
+    print("Multiple")
+    sudoku.addCandidate(sudoku.getRow(1), 5)
+    sudoku.addCandidate(sudoku.getRow(2), 5)
+    sudoku.removeCandidate(sudoku.getCol(2), 5)
+    sudoku.printMoves()
 
     
     
