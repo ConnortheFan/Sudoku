@@ -199,7 +199,7 @@ class Sudoku:
         return cells
     
     def getRelated(self, cell) -> List[Cell]:
-        """Gets all related Cells to a given Cell
+        """Gets all related Cells to a given Cell, not including given Cell
 
         Args:
             cell (Cell or (int, int)): Cell object or tuple (row, col)
@@ -215,6 +215,7 @@ class Sudoku:
         cells.extend(self.getBox(cell.box))
         cells.extend(self.getRow(cell.row))
         cells.extend(self.getCol(cell.col))
+        cells.remove(cell)
         
         cells = sorted(list(set(cells)))
         return cells
@@ -269,7 +270,7 @@ class Sudoku:
         """
         filled = [cell for row in self.board for cell in row if cell.filled is True]
         for cell in filled:
-            relatedCells = self.getRelatedFilled(cell.row, cell.col)
+            relatedCells = self.getRelatedFilled(cell)
             relatedCells.remove(cell)
             for related in relatedCells:
                 if cell.number == related.number:
