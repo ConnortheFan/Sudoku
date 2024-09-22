@@ -21,6 +21,7 @@ class Move:
         self.changes = []
         self.prev: Move = prevMove
         self.next = None
+        self.desc: str = ""
         if prevMove != None:
             prevMove.next = self
     
@@ -33,6 +34,14 @@ class Move:
             number (int or List[int]): number(s) being affected. If multiple numbers given, use format [prev, new]
         """
         self.changes.append((cell, changeType, number))
+        
+    def setDesc(self, description: str) -> None:
+        """Adds description to the move, used for the solver.
+
+        Args:
+            description (str): Description of move
+        """
+        self.desc = description
         
     def show(self):
         """Prints move

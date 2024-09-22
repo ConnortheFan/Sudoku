@@ -3,27 +3,22 @@ from Sudoku import Sudoku
 from typing import List
 from Move import Move
 
-class Solver(Sudoku):
+class Solver:
     """Create a Solver class that takes a Sudoku board and solves it with step by step instructions.
-
-    Args:
-        Sudoku: base Sudoku board
     """
     
-    board: List[List[Cell]]
-    empty: List[Cell]
-    moves: List[Move]
-
+    sudoku: Sudoku
+    emptyCells: List[Cell]
     
-    def __init__(self, filename: str = ""):
+    def __init__(self, sudoku: Sudoku):
         """Initialize Solver from current board
         
-        Solver will 
+        Solver will make copy of current Sudoku board
 
         Args:
-            filename (str, optional): filename of board. Defaults to ""
+            sudoku (Sudoku): Sudoku board
         """
         
-        super().__init__(filename)
-        self.moves = []
-        self.empty = [cell for row in self.board for cell in row if cell.filled is False]
+        self.sudoku = sudoku.copy()
+        self.emptyCells = [cell for row in self.sudoku.board for cell in row if cell.filled is False]
+        
