@@ -337,6 +337,11 @@ class Sudoku:
                 cell.clear()
                 
     def copy(self):
+        """Creates deep copy of Sudoku object
+
+        Returns:
+            Sudoku: deep copy of Sudoku object, with Cells copied as well
+        """
         newBoard: Sudoku = Sudoku()
         for i, row in enumerate(self.board):
             for j, cell in enumerate(row):
@@ -345,6 +350,17 @@ class Sudoku:
                 newCell.filled = cell.filled
                 newCell.fixed = cell.fixed
         return newBoard
+    
+    def setAllCandidates(self) -> None:
+        """Sets all candidates for all valid cells using only basic Sudoku rules
+        """
+        emptyCells = [cell for row in self.board for cell in row if cell.filled is False]
+        for cell in emptyCells:
+            cell.clear()
+            relatedFilledCells = self.getRelatedFilled(cell)
+            cell.candidates = [1,2,3,4,5,6,7,8,9]
+            for filledCell in relatedFilledCells:
+                cell.removeCandidate(filledCell.number)
     
     def printMoves(self):
         move = self.startMove
@@ -359,22 +375,14 @@ def main() -> None:
     sols = ["easysol", "medsol", "hardsol"]
     
     sudoku = Sudoku(date+boards[0])
-    copy = sudoku.copy()
-    sudoku.fill((1,2), 1)
-    copy.fill((1,2),2)
+    sudoku.setAllCandidates()
     
     
-    print("Original")
     sudoku.show()
-    
-    
-    print("Copy")
-    copy.show()
-    
-    
-    
+    for row in sudoku.board:
+        for cell in row:
+            if cell.filled is False:
+                print(f'({cell.row}, {cell.col}): {cell.candidates}')
 
-    
-    
 if __name__ == "__main__":
     main()
