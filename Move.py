@@ -22,6 +22,9 @@ class Move:
         self.prev: Move = prevMove
         self.next = None
         self.desc: str = ""
+        self.step = 0
+        if prevMove != None:
+            self.step = prevMove.step + 1
         if prevMove != None:
             prevMove.next = self
     
@@ -47,5 +50,6 @@ class Move:
         """Prints move
         """
         
+        print(f'Step {self.step}: {self.desc}')
         for change in self.changes:
             print(f"({change[0].row}, {change[0].col}): {change[1]} {change[2]}")
