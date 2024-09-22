@@ -39,6 +39,15 @@ class Solver(Sudoku):
         self.setAllCandidates()
         self.emptyCells = [cell for row in self.board for cell in row if cell.filled is False]
         
+    def fill(self, cell, number: int) -> None:
+        """Similar to Sudoku fill function, but removes cell from emptyCells list
+
+        Args:
+            cell (Cell or (int, int)): Either the Cell object or (row, col) tuple
+            number (int): number
+        """
+        super().fill(cell, number)
+        self.emptyCells.remove(cell)
         
         
     def nakedSingle(self) -> bool:
@@ -53,26 +62,99 @@ class Solver(Sudoku):
             if len(cell.candidates) == 1:
                 self.fill(cell, cell.candidates[0])
                 self.currMove.setDesc("Naked Single")
-                self.emptyCells.remove(cell)
                 return True
+        return False
+        
+    def clothedSingle(self) -> bool:
+        """Finds Clothed Singles and makes first move
+
+        If no Clothed Singles found, returns False
+
+        Returns:
+            bool: if any changes were made
+        """
+        for cell in self.emptyCells:
+            # Need to check against row, col, and box
+            relatedRow = [related for related in self.getRow(cell.row) if related.filled is False]
+            relatedRow.remove(cell)
+            relatedRow = list(set([candidates for cells in relatedRow for candidates in cells.candidates]))
+            
+            relatedCol = [related for related in self.getCol(cell.col) if related.filled is False]
+            relatedCol.remove(cell)
+            relatedCol = list(set([candidates for cells in relatedCol for candidates in cells.candidates]))
+
+            relatedBox = [related for related in self.getBox(cell.box) if related.filled is False]
+            relatedBox.remove(cell)
+            relatedBox = list(set([candidates for cells in relatedBox for candidates in cells.candidates]))
+            
+            
+            # print(f'{cell.row}, {cell.col}: {cell.candidates}')
+            # print(f'     row: {relatedRow}')
+            # print(f'     col: {relatedCol}')
+            # print(f'     box: {relatedBox}')
+
+            for candidate in cell.candidates:
+                if candidate not in relatedRow:
+                    self.fill(cell, candidate)
+                    self.currMove.setDesc("Clothed Single (Row)")
+                    return True
+                if candidate not in relatedCol:
+                    self.fill(cell, candidate)
+                    self.currMove.setDesc("Clothed Single (Col)")
+                    return True
+                if candidate not in relatedBox:
+                    self.fill(cell, candidate)
+                    self.currMove.setDesc("Clothed Single (Box)")
+                    return True
         return False
         
         
 def main() -> None:
-    s = Sudoku("puzzles/8-21-24/easy")
-    sol = Sudoku("puzzles/8-21-24/easysol")
-    solver = Solver(s)
-    solver.show()
+    dates = ["8-21-24/", "8-22-24/", "9-22-24/"]
+    boards = ["easy", "med", "hard"]
     
-    change = True
-    while change:    
-        change = solver.nakedSingle()
-        
-    solver.printMoves()
-    print("Solver Result")
-    solver.show()
-    print("Solution")
-    sol.show()
+    for date in dates:
+        for board in boards:
+            print(date+board)   
+            s = Sudoku("puzzles/" + date + board)
+            sol = Sudoku("puzzles/" + date + board + "sol")
+            solver = Solver(s)
+            
+            change = True
+            while change:    
+                change = solver.clothedSingle()
+            
+                
+            solver.printMoves()
+            print("Original")
+            s.show()
+            print("Solver Result")
+            solver.show()
+            print("Solution")
+            sol.show()
+    
+    
+    # name = "puzzles/9-22-24/med"
+    # s = Sudoku(name)
+    # solver = Solver(s)    
+    # solver.show()
+    # change = True
+    # while change:    
+    #     change = solver.nakedSingle()
+    # solver.printMoves()
+    # solver.show()
+    # solution = ""
+    # for row in solver.board:
+    #     for j, cell in enumerate(row):
+    #         solution += f'{cell.number}'
+    #         if j == 8:
+    #             solution += f'\n'
+    #         else:
+    #             solution += ' '
+    # print(solution)
+    # f = open(name+'sol', 'w')
+    # f.write(solution)
+    # f.close()
     
 if __name__ == "__main__":
     main()
