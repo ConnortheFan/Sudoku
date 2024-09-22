@@ -1,3 +1,20 @@
+# 9/21/2024
+
+I wanted to make progress, but didn't feel like working with a library, so I'm setting up the Solver.
+
+Changes:
+
+* Redid Solver init
+    * Made copy function for Sudoku for backend of Solver
+        * Changed init so this copy function was unnecessary
+    * Added description and steps to moves to describe each Solver move
+    * Made setAllCandidates function for Sudoku for both regular setting and for Solver
+* Made nakedSingle Solver function
+    * Fills cells with 1 candidate
+* Made clothedSingle Solver function
+    * Fills cells who's candidate is unique in their row/col/box
+    * Override fill method for Solver to remove cell from emptyCell list
+
 # 9/19/2024
 
 Just made some quick changes to the methods to be able to select and change multiple cells at once like in Logic Wiz Sudoku.
