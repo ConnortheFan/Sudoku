@@ -8,6 +8,11 @@ class Sudoku:
     
     Uses 9x9 Cells to construct the board.
     Uses Moves to record changes
+    
+    Params:
+        board (List[List[Cell]]): 2D Array to represent Sudoku board
+        startMove (Move): head of moves linked list
+        currMove (Move): current move
     """
     
     board: List[List[Cell]]
