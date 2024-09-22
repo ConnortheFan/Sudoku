@@ -335,6 +335,16 @@ class Sudoku:
             elif changeType == "clear":
                 # Clear cell
                 cell.clear()
+                
+    def copy(self):
+        newBoard: Sudoku = Sudoku()
+        for i, row in enumerate(self.board):
+            for j, cell in enumerate(row):
+                newCell: Cell = newBoard.getCell(i+1,j+1)
+                newCell.number = cell.number
+                newCell.filled = cell.filled
+                newCell.fixed = cell.fixed
+        return newBoard
     
     def printMoves(self):
         move = self.startMove
@@ -349,58 +359,20 @@ def main() -> None:
     sols = ["easysol", "medsol", "hardsol"]
     
     sudoku = Sudoku(date+boards[0])
+    copy = sudoku.copy()
+    sudoku.fill((1,2), 1)
+    copy.fill((1,2),2)
+    
+    
+    print("Original")
     sudoku.show()
     
-    # Make sure no moves are made when no changes made
-    c56 = sudoku.getCell(5,6)
-    sudoku.removeCandidate(c56,1)
-    sudoku.removeCandidate((1,1),5)
-    sudoku.addCandidate((6,5),9)
-    sudoku.clear((1,1))
-    sudoku.empty((1,1))
     
-    # Make sure fill works with Move
-    c46 = sudoku.getCell(4,6)
-    sudoku.addCandidate(c46,1)
-    sudoku.addCandidate(c46,2)
-    sudoku.addCandidate((4,6),1)
-    sudoku.removeCandidate(c46,1)
-    sudoku.empty(c46)
-    sudoku.clear(c46)
-    sudoku.addCandidate(c46,1)
-    sudoku.fill(c56,1)
+    print("Copy")
+    copy.show()
     
-    print("Regular")
-    sudoku.show()       
-    sudoku.printMoves()
-    print(sudoku.getCell(4,6).candidates)
     
-     
-    print("Undo")   
-    sudoku.undo()
-    sudoku.show()
-    sudoku.printMoves()
-    print(sudoku.getCell(4,6).candidates)
     
-    print("Redo")
-    sudoku.redo()
-    sudoku.show()
-    sudoku.printMoves()
-    print(sudoku.getCell(4,6).candidates)
-
-    print("Break")
-    sudoku.undo()
-    sudoku.addCandidate(c56,1)
-    sudoku.show()
-    sudoku.printMoves()
-    print(sudoku.getCell(4,6).candidates)
-    print(sudoku.getCell(5,6).candidates)
-    
-    print("Multiple")
-    sudoku.addCandidate(sudoku.getRow(1), 5)
-    sudoku.addCandidate(sudoku.getRow(2), 5)
-    sudoku.removeCandidate(sudoku.getCol(2), 5)
-    sudoku.printMoves()
 
     
     
