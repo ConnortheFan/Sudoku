@@ -99,12 +99,12 @@ class Sudoku:
             cell.clear()
             self.currMove = move
     
-    def removeCandidate(self, cells, number: int) -> None:
+    def removeCandidate(self, cells, numbers: int) -> None:
         """Removes candidate from Cells
 
         Args:
             cells (Cell or (int, int) or List[Cell, (int,int)]): Cell object, tuple (row, col), or List of Cells and tuples
-            number (int): candidate
+            numbers (int or List[int]): candidate(s) to remove
         """
         
         # Check for multiple cells selected
@@ -113,20 +113,31 @@ class Sudoku:
             for cell in cells:
                 if isinstance(cell, tuple):
                     cell = self.getCell(cell[0], cell[1])
-                if not cell.fixed and not cell.filled and number in cell.candidates:
-                    move.addChange(cell, "removeCandidate", number)
-                    cell.removeCandidate(number)
+                if isinstance(numbers, List):
+                    for number in numbers:
+                        if not cell.fixed and not cell.filled and number in cell.candidates:
+                            move.addChange(cell, "removeCandidate", number)
+                            cell.removeCandidate(number)
+                else:
+                    if not cell.fixed and not cell.filled and numbers in cell.candidates:
+                            move.addChange(cell, "removeCandidate", numbers)
+                            cell.removeCandidate(numbers)
             self.currMove = move
             return
         else:
             # Single cell
             if isinstance(cells, tuple):
                 cells = self.getCell(cells[0], cells[1])
-            if not cells.fixed and not cells.filled and number in cells.candidates:
-                move = Move(self.currMove)
-                move.addChange(cells, "removeCandidate", number)
-                cells.removeCandidate(number)
-                self.currMove = move
+            if isinstance(numbers, List):
+                    for number in numbers:
+                        if not cells.fixed and not cells.filled and number in cells.candidates:
+                            move.addChange(cells, "removeCandidate", number)
+                            cells.removeCandidate(number)
+            else:
+                if not cells.fixed and not cells.filled and numbers in cells.candidates:
+                        move.addChange(cells, "removeCandidate", numbers)
+                        cells.removeCandidate(numbers)
+            self.currMove = move
                 
     def addCandidate(self, cells, number: int) -> None:
         """Adds a candidate to Cell
