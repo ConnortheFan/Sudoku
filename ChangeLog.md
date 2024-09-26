@@ -1,3 +1,16 @@
+# 9/25/2024
+
+Back at University, so I'll do my best to finish this project up before schoolwork piles on
+
+Changes:
+
+* Made twins Solver function
+    * Adjusted removeCandidate in Sudoku to remove multiple candidates at once
+
+I've decided to make twins separate from tuplets because I was thinking of making this a Sudoku lesson tutorial and wanted to rank the solving methods by difficulty. Twins would be an intermediate method while tuplets would be advanced. 
+
+Also, instead of using pygame to make a popout window for this, I think I'll use github pages to make this solver a website thing. I was thinking that using the query to input a sudoku puzzle like 120050...(81 digits), the resulting webpage would then have the step-by-step on how to solve. This way, every solution would have a unique webpage and prevent too much client-side work since I heard that github isn't very good for interactive stuff.
+
 # 9/21/2024
 
 I wanted to make progress, but didn't feel like working with a library, so I'm setting up the Solver.
