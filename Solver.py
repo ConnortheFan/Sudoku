@@ -87,7 +87,6 @@ class Solver(Sudoku):
             relatedBox.remove(cell)
             relatedBox = list(set([candidates for cells in relatedBox for candidates in cells.candidates]))
             
-            
             # print(f'{cell.row}, {cell.col}: {cell.candidates}')
             # print(f'     row: {relatedRow}')
             # print(f'     col: {relatedCol}')
@@ -107,7 +106,41 @@ class Solver(Sudoku):
                     self.currMove.setDesc("Clothed Single (Box)")
                     return True
         return False
+       
+    def twins(self) -> bool:
+        """Finds twins and removes candidates
         
+        If no change, returns false
+
+        Returns:
+            bool: If any changes were made
+        """
+        # Go through 27 sets of 9 cells
+        # Rows, Cols, and Boxes
+        cellgroups: List[List[Cell]] = []
+        for i in range(1,10):
+            cellgroups.append(self.getRow(i))
+            cellgroups.append(self.getCol(i))
+            cellgroups.append(self.getBox(i))
+        for cellgroup in cellgroups:
+            emptyCells = [cell for cell in cellgroup if cell.filled is False]
+            possibleTwins = [cell for cell in emptyCells if len(cell.candidates) == 2]
+            if len(possibleTwins) < 2:
+                continue
+            for i, possibleTwin in enumerate(possibleTwins):
+                for j in range(i+1, len(possibleTwins)):
+                    if possibleTwin.candidates == possibleTwins[j].candidates:
+                        # These are twins
+                        twin1 = possibleTwin
+                        twin2 = possibleTwins[j]
+                        emptyCells.remove(twin1)
+                        emptyCells.remove(twin2)
+                        for emptyCell in emptyCells:
+                            if twin1.candidates[0] in emptyCell.candidates or twin1.candidates[1] in emptyCell.candidates:       
+                                self.removeCandidate(emptyCells, twin1.candidates)
+                                self.currMove.setDesc(f"Twins at ({twin1.row}, {twin1.col}) ({twin2.row}, {twin2.col})")
+                                return True
+        return False 
         
 def main() -> None:
     dates = ["8-21-24/", "8-22-24/", "9-22-24/"]
@@ -122,7 +155,7 @@ def main() -> None:
             
             change = True
             while change:    
-                change = solver.clothedSingle()
+                change = solver.twins()
             
                 
             solver.printMoves()
