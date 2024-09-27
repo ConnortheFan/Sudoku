@@ -1,3 +1,13 @@
+# 9/27/2024
+
+Tired now, so won't make many changes.
+
+Changes:
+
+* Added 9-27-24 Sudokus
+
+For the next Solver method, I'll add intercept or intersect (name undecided) since that helped solve the medium Sudoku.
+
 # 9/25/2024
 
 Back at University, so I'll do my best to finish this project up before schoolwork piles on
