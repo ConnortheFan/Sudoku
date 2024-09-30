@@ -1,3 +1,12 @@
+# 9/30/2024
+
+Did a bit of debugging on intersect, should work fine now.
+
+Changes:
+
+* Bug fixed intersect where it would include filled cells in the intersected row/col/box
+* Included a __eq__ function in Sudoku to make it easier to compare the solver to the solution
+
 # 9/29/2024
 
 Decided to name the method intersect since intercept is more like at one point, while intersect is about the cells being in both the row/col and the box.
