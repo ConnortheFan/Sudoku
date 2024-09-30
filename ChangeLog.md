@@ -6,6 +6,7 @@ Changes:
 
 * Bug fixed intersect where it would include filled cells in the intersected row/col/box
 * Included a __eq__ function in Sudoku to make it easier to compare the solver to the solution
+* Included test, testall, makeSol functions in solver for testing and making solutions to already completable puzzles
 
 # 9/29/2024
 

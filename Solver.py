@@ -244,11 +244,39 @@ class Solver(Sudoku):
                             return True
         return False
 
+def makeSol(name):
+    s = Sudoku(name)
+    solver = Solver(s)    
+    solver.show()
+    change = True
+    while change:    
+        change = solver.nakedSingle()
+        if not change:
+            change = solver.clothedSingle()
+        if not change:
+            change = solver.twins()
+        if not change:
+            change = solver.intersect()
+    solver.printMoves()
+    solver.show()
+    solution = ""
+    for row in solver.board:
+        for j, cell in enumerate(row):
+            solution += f'{cell.number}'
+            if j == 8:
+                solution += f'\n'
+            else:
+                solution += ' '
+    print(solution)
+    f = open(name+'sol', 'w')
+    f.write(solution)
+    f.close()
+
 def test():
-    board = "puzzles/9-27-24/hard"
+    board = "puzzles/9-30-24/hard"
     s = Sudoku(board)
     solver = Solver(s)
-    sol = Sudoku(board+"sol")
+    # sol = Sudoku(board+"sol")
     change = True
     steps = 0
     while change and steps < 50:
@@ -349,4 +377,5 @@ def main() -> None:
     f.close()
     
 if __name__ == "__main__":
-    test()
+    # test()
+    makeSol("puzzles/9-30-24/easy")
