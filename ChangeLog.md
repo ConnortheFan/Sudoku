@@ -1,3 +1,18 @@
+# 9/29/2024
+
+Decided to name the method intersect since intercept is more like at one point, while intersect is about the cells being in both the row/col and the box.
+
+Changes:
+
+* Implemented intersect Solver method
+
+To-Do:
+
+* Implement:
+    * Tuplets
+    * Swordfish
+        * X-Wing as a degraded Swordfish?
+
 # 9/27/2024
 
 Tired now, so won't make many changes.
