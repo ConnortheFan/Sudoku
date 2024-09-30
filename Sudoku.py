@@ -386,6 +386,13 @@ class Sudoku:
             move.show() 
             print()
     
+    def __eq__(self, other):
+        equal = True
+        for row in range(1,10):
+            for col in range(1,10):
+                equal = equal and self.getCell(row,col).number == other.getCell(row,col).number
+        return equal
+    
 def main() -> None:
     date = "puzzles/8-22-24/"
     boards = ["easy", "med", "hard"]
