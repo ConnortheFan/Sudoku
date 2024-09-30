@@ -164,7 +164,7 @@ class Solver(Sudoku):
                         sameRow = False
                 if sameRow:
                     # Check for changes
-                    otherRowCells = [cell for cell in self.getRow(row) if cell not in possibleIntersectCells]
+                    otherRowCells = [cell for cell in self.getRow(row) if cell not in possibleIntersectCells and cell.filled is False]
                     for otherRowCell in otherRowCells:
                         if boxCandidate in otherRowCell.candidates:
                             self.removeCandidate(otherRowCells, boxCandidate)
@@ -181,7 +181,7 @@ class Solver(Sudoku):
                         sameCol = False
                 if sameCol:
                     # Check for changes
-                    otherColCells = [cell for cell in self.getCol(col) if cell not in possibleIntersectCells]
+                    otherColCells = [cell for cell in self.getCol(col) if cell not in possibleIntersectCells and cell.filled is False]
                     for otherColCell in otherColCells:
                         if boxCandidate in otherColCell.candidates:
                             self.removeCandidate(otherColCells, boxCandidate)
@@ -207,7 +207,7 @@ class Solver(Sudoku):
                         sameBox = False
                 if sameBox:
                     # Check for changes
-                    otherBoxCells = [cell for cell in self.getBox(box) if cell not in possibleIntersectCells]
+                    otherBoxCells = [cell for cell in self.getBox(box) if cell not in possibleIntersectCells and cell.filled is False]
                     for otherBoxCell in otherBoxCells:
                         if rowCandidate in otherBoxCell.candidates:
                             self.removeCandidate(otherBoxCells, rowCandidate)
@@ -233,7 +233,7 @@ class Solver(Sudoku):
                         sameBox = False
                 if sameBox:
                     # Check for changes
-                    otherBoxCells = [cell for cell in self.getBox(box) if cell not in possibleIntersectCells]
+                    otherBoxCells = [cell for cell in self.getBox(box) if cell not in possibleIntersectCells and cell.filled is False]
                     for otherBoxCell in otherBoxCells:
                         if colCandidate in otherBoxCell.candidates:
                             self.removeCandidate(otherBoxCells, colCandidate)
@@ -245,11 +245,13 @@ class Solver(Sudoku):
         return False
 
 def test():
-    board = "puzzles/9-27-24/med"
+    board = "puzzles/9-27-24/hard"
     s = Sudoku(board)
     solver = Solver(s)
+    sol = Sudoku(board+"sol")
     change = True
-    while change:
+    steps = 0
+    while change and steps < 50:
         change = solver.nakedSingle()
         if not change:
             change = solver.clothedSingle()
@@ -257,11 +259,42 @@ def test():
             change = solver.twins()
         if not change:
             change = solver.intersect()
-    
-    
+        steps += 1
+        # print(solver.currMove.desc)
+        
+    # if solver == sol:
+    #     print(f"Correct Solution in {solver.currMove.step} steps")
+    # else:
     solver.printMoves()
     s.show()
     solver.show()
+
+def testall():
+    dates = ["8-21-24/", "8-22-24/", "9-22-24/", "9-27-24/"]
+    boards = ["easy", "med", "hard"]
+    for date in dates:
+        for board in boards:
+            s = Sudoku("puzzles/"+date+board)
+            solver = Solver(s)
+            sol = Sudoku("puzzles/"+date+board+"sol")
+            change = True
+            while change:
+                change = solver.nakedSingle()
+                if not change:
+                    change = solver.clothedSingle()
+                if not change:
+                    change = solver.twins()
+                if not change:
+                    change = solver.intersect()
+            
+            print(date + board)
+            if solver == sol:
+                print(f"Correct Solution in {solver.currMove.step} steps")
+            else:
+                solver.printMoves()
+                s.show()
+                solver.show()
+        
     return
 
 def main() -> None:
